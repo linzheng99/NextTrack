@@ -2,6 +2,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import Link from 'next/link'
 import { z } from "zod"
 
 import DottedSeparator from '@/components/dotted-separator';
@@ -20,26 +21,22 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import Link from 'next/link'
+import { loginSchema } from '../schemas'
+import { useLogin } from '../api/use-login'
 
 
 export default function SignInCard() {
-  const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8, {
-      message: "最少需要8位",
-    }),
-  })
+  const { mutate } = useLogin()
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: ""
     },
   })
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  function onSubmit(values: z.infer<typeof loginSchema>) {
+    mutate({ json: values })
   }
   return (
     <Card className="w-full md:w-[487px] h-full border-none shadow-none">

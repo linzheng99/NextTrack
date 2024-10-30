@@ -2,6 +2,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import Link from 'next/link'
 import { z } from "zod"
 
 import DottedSeparator from '@/components/dotted-separator';
@@ -20,28 +21,22 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import Link from 'next/link'
+import { registerSchema } from '../schemas'
+import { useRegister } from '../api/use-register'
 
 
 export default function SignUpCard() {
-  const formSchema = z.object({
-    username: z.string().trim().min(1, {message: '请输入用户名'}),
-    email: z.string().email(),
-    password: z.string().min(8, {
-      message: "最少需要8位",
-    }),
-  })
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { mutate } = useRegister()
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       username: "",
       email: "",
       password: ""
     },
   })
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  function onSubmit(values: z.infer<typeof registerSchema>) {
+    mutate({ json: values })
   }
   return (
     <Card className="w-full md:w-[487px] h-full border-none shadow-none">
@@ -52,7 +47,7 @@ export default function SignUpCard() {
       <CardContent className='p-7'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
+            <FormField
               control={form.control}
               name="username"
               render={({ field }) => (
