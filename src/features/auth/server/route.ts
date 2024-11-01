@@ -1,5 +1,6 @@
-import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
+import { Hono } from 'hono'
+
 import { loginSchema, registerSchema } from '../schemas'
 
 export const runtime = 'edge'

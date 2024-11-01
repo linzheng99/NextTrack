@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { InferRequestType, InferResponseType } from 'hono'
+import { type InferRequestType, type InferResponseType } from 'hono'
 
 import { client } from '@/lib/rpc'
 

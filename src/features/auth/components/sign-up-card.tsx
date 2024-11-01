@@ -1,9 +1,9 @@
-import { FcGoogle } from 'react-icons/fc'
-import { FaGithub } from 'react-icons/fa'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 import Link from 'next/link'
-import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { FaGithub } from 'react-icons/fa'
+import { FcGoogle } from 'react-icons/fc'
+import { type z } from "zod"
 
 import DottedSeparator from '@/components/dotted-separator';
 import { Button } from '@/components/ui/button';
@@ -21,8 +21,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { registerSchema } from '../schemas'
+
 import { useRegister } from '../api/use-register'
+import { registerSchema } from '../schemas'
 
 
 export default function SignUpCard() {
