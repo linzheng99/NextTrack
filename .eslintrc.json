@@ -4,7 +4,10 @@
       "extends": [
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
       ],
-      "files": ["*.ts", "*.tsx"],
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
       "parserOptions": {
         "project": "./tsconfig.json"
       },
@@ -13,6 +16,7 @@
         "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unsafe-member-access": "off",
         "@typescript-eslint/no-unsafe-assignment": "off"
+        // "@typescript-eslint/require-await": "off"
       }
     }
   ],
@@ -20,13 +24,19 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["**/*.md", "**/*.json"],
+  "ignorePatterns": [
+    "**/*.md",
+    "**/*.json"
+  ],
   "plugins": [
     "@typescript-eslint",
     "simple-import-sort",
     "unused-imports"
   ],
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "rules": {
     "@typescript-eslint/consistent-type-imports": [
       "warn",
@@ -35,7 +45,12 @@
         "fixStyle": "inline-type-imports"
       }
     ],
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "warn",
     "unused-imports/no-unused-imports": "error"
