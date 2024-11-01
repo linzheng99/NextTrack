@@ -1,3 +1,5 @@
+"use client"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from 'next/link'
 import { useForm } from "react-hook-form"
@@ -27,7 +29,7 @@ import { loginSchema } from '../schemas'
 
 
 export default function SignInCard() {
-  const { mutate } = useLogin()
+  const { mutate, isPending } = useLogin()
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -72,17 +74,17 @@ export default function SignInCard() {
                 </FormItem>
               )}
             />
-            <Button type="submit" size='lg' className='w-full' >登录</Button>
+            <Button type="submit" size='lg' className='w-full' disabled={isPending}>Login</Button>
           </form>
         </Form>
       </CardContent>
       <DottedSeparator className='px-7 mb-2' />
       <CardContent className='flex flex-col gap-2 w-full p-7'>
-        <Button variant={'outline'}>
+        <Button variant={'outline'} disabled={isPending}>
           <FcGoogle />
           Login with Google
         </Button>
-        <Button variant={'outline'}>
+        <Button variant={'outline'} disabled={isPending}>
           <FaGithub />
           Login with Github
         </Button>
