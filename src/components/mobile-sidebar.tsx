@@ -24,20 +24,18 @@ export default function MoibileSidebar() {
   }, [pathname])
 
   return (
-    <div>
-      <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          <Button variant={'secondary'} size={'icon'} className="lg:hidden">
-            <MenuIcon className="size-4 text-neutral-500" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side={'left'} className="p-0">
-          <SheetHeader>
-            <SheetTitle></SheetTitle>
-          </SheetHeader>
-          <Sidebar />
-        </SheetContent>
-      </Sheet>
-    </div>
+    <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild>
+        <Button variant={'secondary'} size={'icon'} className="lg:hidden border">
+          <MenuIcon className="size-4 text-neutral-500" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side={'left'} className="p-0">
+        <SheetHeader>
+          <SheetTitle></SheetTitle>
+        </SheetHeader>
+        <Sidebar />
+      </SheetContent>
+    </Sheet>
   )
 }
