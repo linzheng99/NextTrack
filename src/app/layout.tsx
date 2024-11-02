@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from 'next/font/google'
 
 import QueryProvider from '@/components/query-provider';
+import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ['latin'] })
@@ -24,6 +25,7 @@ export default function RootLayout({
         className={cn(inter.className, `antialiased`)}
       >
         <QueryProvider>
+          <Toaster />
           {children}
         </QueryProvider>
       </body>

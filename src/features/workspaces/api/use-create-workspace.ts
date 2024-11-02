@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { type InferRequestType, type InferResponseType } from 'hono'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 import { client } from '@/lib/rpc'
 
@@ -13,10 +14,19 @@ export const useCreateWorkspace = () => {
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
       const response = await client.api.workspaces['$post']({ json })
+
+      if (!response.ok) {
+        throw new Error('创建失败...')
+      }
+
       return await response.json()
     },
     onSuccess: () => {
       router.refresh()
+      toast.success('创建成功！')
+    },
+    onError: (error) => {
+      toast.error(error.message)
     }
   })
 
