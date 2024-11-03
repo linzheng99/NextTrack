@@ -26,12 +26,18 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
 import { useCreateWorkspace } from "../api/use-create-workspace"
 import { carateWorkspacesSchema } from "../schemas"
 
+interface CreateWorkspaceFormProps {
+  onCancel?: () => void
+}
 
-export default function CreateWorkspacesForm() {
+export default function CreateWorkspaceForm({
+  onCancel
+}: CreateWorkspaceFormProps) {
   const router = useRouter()
   const { mutate, isPending } = useCreateWorkspace()
 
@@ -133,7 +139,7 @@ export default function CreateWorkspacesForm() {
             />
             <DottedSeparator className="mb-4" />
             <div className="flex justify-end gap-4">
-              <Button type="button" variant="outline" onClick={() => form.reset()}>Reset</Button>
+              <Button type="button" variant="outline" onClick={() => onCancel?.()} className={cn(!onCancel && 'invisible')}>Cancel</Button>
               <Button type="submit" disabled={isPending}>Submit</Button>
             </div>
           </form>

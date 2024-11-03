@@ -16,7 +16,7 @@ export const useLogout = () => {
       return await response.json()
     },
     onSuccess: async () => {
-      router.refresh()
+      router.push('/sign-in')
       // 退出成功 -> 去找 对应的 key 的 useQuery
       await queryClient.invalidateQueries({ queryKey: ['current'] })
       await queryClient.invalidateQueries({ queryKey: ['workspaces'] })
