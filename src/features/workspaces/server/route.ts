@@ -4,10 +4,11 @@ import { ID, Query } from "node-appwrite"
 
 import { DATABASES_ID, IMAGES_BUCKET_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config"
 import { MemberRole } from "@/features/members/types"
+import { getMember } from "@/features/members/utils"
 import { sessionMiddleware } from "@/lib/session-middleware"
 import { generateInviteCode } from "@/lib/utils"
 
-import { carateWorkspacesSchema } from "../schemas"
+import { carateWorkspacesSchema, updateWorkspacesSchema } from "../schemas"
 
 const app = new Hono()
   .get('/', sessionMiddleware, async (c) => {
@@ -84,6 +85,58 @@ const app = new Hono()
           userId: user.$id,
           role: MemberRole.ADMIN,
         })
+
+      return c.json({ data: workspace })
+    }
+  )
+  .patch(
+    '/:workspaceId',
+    sessionMiddleware,
+    zValidator('form', updateWorkspacesSchema),
+    async (c) => {
+      const databases = c.get('databases')
+      const sotrage = c.get('storage')
+      const user = c.get('user')
+
+      const { workspaceId } = c.req.param()
+      const { name, image } = c.req.valid('form')
+
+      const member = await getMember({
+        databases,
+        workspaceId,
+        userId: user.$id
+      })
+
+      if (!member || member.role !== MemberRole.ADMIN) {
+        return c.json({ error: 'Unauthorized' }, 401)
+      }
+
+      let uploadedImageUrl: string = ''
+      if (image instanceof File) {
+        const file = await sotrage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          image
+        )
+        const arrayBuffer = await sotrage.getFilePreview(
+          IMAGES_BUCKET_ID,
+          file.$id
+        )
+        const mimeType = image.type || 'image/png'
+        uploadedImageUrl = `data:${mimeType};base64,${Buffer.from(arrayBuffer).toString('base64')}`
+      } else {
+        uploadedImageUrl = image || ''
+      }
+
+      const workspace = await databases.updateDocument(
+        DATABASES_ID,
+        WORKSPACES_ID,
+        workspaceId,
+        {
+          name,
+          image: uploadedImageUrl,
+        }
+      );
 
       return c.json({ data: workspace })
     }
