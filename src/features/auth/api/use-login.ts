@@ -25,7 +25,9 @@ export const useLogin = () => {
     onSuccess: async () => {
       router.refresh()
       toast.success('登录成功！')
+      // 去找 对应的 key 的 useQuery
       await queryClient.invalidateQueries({ queryKey: ['current'] })
+      await queryClient.invalidateQueries({ queryKey: ['workspaces'] })
     },
     onError: (error) => {
       toast.error(error.message)
