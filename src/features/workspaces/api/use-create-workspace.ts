@@ -20,9 +20,9 @@ export const useCreateWorkspace = () => {
 
       return await response.json()
     },
-    onSuccess: async() => {
+    onSuccess: () => {
       toast.success('创建成功！')
-      await queryClient.invalidateQueries({ queryKey: ['workspaces'] })
+      void queryClient.invalidateQueries({ queryKey: ['workspaces'] })
     },
     onError: (error) => {
       toast.error(error.message)
