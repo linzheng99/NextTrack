@@ -7,6 +7,7 @@ import React, { useRef } from "react"
 import { useForm } from "react-hook-form"
 import { type z } from "zod"
 
+import DottedSeparator from "@/components/dotted-separator"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -68,6 +69,7 @@ export default function CreateWorkspacesForm() {
         <CardTitle>创建工作区</CardTitle>
       </CardHeader>
       <CardContent>
+        <DottedSeparator className="mb-4" />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -75,9 +77,9 @@ export default function CreateWorkspacesForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>名称</FormLabel>
                   <FormControl>
-                    <Input placeholder="请输入工作区" {...field} />
+                    <Input placeholder="请输入工作区名称" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,7 +90,7 @@ export default function CreateWorkspacesForm() {
               name="image"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-semibold">封面</FormLabel>
+                  <FormLabel className="text-sm font-semibold">图标</FormLabel>
                   <div className="flex items-center gap-4">
                     {
                       field.value ? (
@@ -126,6 +128,7 @@ export default function CreateWorkspacesForm() {
                 </FormItem>
               )}
             />
+            <DottedSeparator className="mb-4" />
             <div className="flex justify-end gap-4">
               <Button type="button" variant="outline" onClick={() => form.reset()}>Reset</Button>
               <Button type="submit" disabled={isPending}>Submit</Button>
