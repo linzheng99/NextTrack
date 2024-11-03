@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { RiAddCircleFill } from "react-icons/ri"
 
 import {
@@ -11,10 +12,17 @@ import {
 } from "@/components/ui/select"
 
 import { useGetWorkspaces } from "../api/use-get-workspaces"
+import { useWorkspaceId } from "../hooks/use-workspace-id"
 import WorkspaceAvatar from "./workspace-avatar"
 
 export default function WorkspaceSwitcher() {
+  const workspaceId = useWorkspaceId()
+  const router = useRouter()
   const { data: workspaces } = useGetWorkspaces()
+
+  const handleSelect = (workspaceId: string) => {
+    router.push(`/workspaces/${workspaceId}`)
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -22,7 +30,7 @@ export default function WorkspaceSwitcher() {
         <p className="text-xs uppercase text-neutral-500">workspaces</p>
         <RiAddCircleFill className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition" />
       </div>
-      <Select>
+      <Select onValueChange={handleSelect} value={workspaceId}>
         <SelectTrigger className="w-full h-full">
           <SelectValue placeholder="workspace" />
         </SelectTrigger>
