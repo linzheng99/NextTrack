@@ -6,6 +6,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import React, { useRef } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { type z } from "zod"
 
 import DottedSeparator from "@/components/dotted-separator"
@@ -28,15 +29,14 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useConfirm } from "@/hooks/use-confirm"
 import { cn } from "@/lib/utils"
 
+import { useDeleteWorkspace } from "../api/use-delete-workspace"
+import { useResetInviteCode } from "../api/use-reset-invite-code"
 import { useUpdateWorkspace } from "../api/use-update-workspace"
 import { updateWorkspacesSchema } from "../schemas"
 import { type Workspace } from "../types"
-import { useConfirm } from "@/hooks/use-confirm"
-import { useDeleteWorkspace } from "../api/use-delete-workspace"
-import { useResetInviteCode } from "../api/use-reset-invite-code"
-import { toast } from "sonner"
 
 interface UpdateWorkspaceFormProps {
   onCancel?: () => void
@@ -114,10 +114,9 @@ export default function UpdateWorkspaceForm({
 
   }
 
-  function handleCopyInviteLink() {
-    navigator.clipboard.writeText(inviteLink).then(() => {
-      toast.success('复制成功！')
-    })
+  async function handleCopyInviteLink() {
+    await navigator.clipboard.writeText(inviteLink)
+    toast.success('复制成功！')
   }
 
   return (

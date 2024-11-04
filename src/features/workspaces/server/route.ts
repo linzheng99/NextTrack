@@ -5,11 +5,11 @@ import { ID, Query } from "node-appwrite"
 import { DATABASES_ID, IMAGES_BUCKET_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config"
 import { MemberRole } from "@/features/members/types"
 import { getMember } from "@/features/members/utils"
+import { createSessionClient } from "@/lib/appwrite"
 import { sessionMiddleware } from "@/lib/session-middleware"
 import { generateInviteCode } from "@/lib/utils"
 
 import { carateWorkspacesSchema, updateWorkspacesSchema } from "../schemas"
-import { createSessionClient } from "@/lib/appwrite"
 
 const app = new Hono()
   .get('/', sessionMiddleware, async (c) => {

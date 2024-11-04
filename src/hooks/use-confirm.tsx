@@ -1,14 +1,14 @@
 import { useState } from "react"
+
 import ResponsiveModal from '@/components/responsive-modal';
+import { Button, type ButtonProps } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Button, ButtonProps } from "@/components/ui/button";
 
 export function useConfirm(
   title: string,

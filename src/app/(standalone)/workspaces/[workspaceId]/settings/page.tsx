@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation"
 
 import { getCurrent } from "@/features/auth/queries"
-import { getWorkspace } from "@/features/workspaces/queries"
 import UpdateWorkspaceForm from "@/features/workspaces/components/update-workspace-form"
+import { getWorkspace } from "@/features/workspaces/queries"
 
 interface WorkspaceIdSettingsPageProps {
-  params: { workspaceId: string }
+  params: Promise<{ workspaceId: string }>
 }
 
 export default async function WorkspaceIdSettingsPage(

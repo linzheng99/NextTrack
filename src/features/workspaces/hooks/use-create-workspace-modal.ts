@@ -7,16 +7,16 @@ export default function useCreateWorkspaceModal() {
     'create-workspace': parseAsBoolean.withDefault(false).withOptions({ clearOnDefault: true })
   })
 
-  function open() {
-    setIsOpen({ 'create-workspace': true })
+  async function open() {
+    await setIsOpen({ 'create-workspace': true })
   }
 
-  function close() {
-    setIsOpen({ 'create-workspace': false })
+  async function close() {
+    await setIsOpen({ 'create-workspace': false })
   }
 
-  function changeOpen(value: boolean) {
-    setIsOpen({ 'create-workspace': value })
+  async function changeOpen(value: boolean) {
+    await setIsOpen({ 'create-workspace': value })
   }
 
   return {

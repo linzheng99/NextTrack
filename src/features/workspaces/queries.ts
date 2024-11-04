@@ -5,9 +5,9 @@ import { Query } from 'node-appwrite'
 import { DATABASES_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
 import { MemberRole } from "@/features/members/types";
 import { getMember } from "@/features/members/utils";
+import { createSessionClient } from "@/lib/appwrite";
 
 import { type Workspace } from "./types";
-import { createSessionClient } from "@/lib/appwrite";
 
 export async function getWorkspaces() {
   try {

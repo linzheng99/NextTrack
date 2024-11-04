@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { getCurrent } from "@/features/auth/queries";
 import SignInCard from "@/features/auth/components/sign-in-card";
+import { getCurrent } from "@/features/auth/queries";
 
 export default async function SignIn() {
   const user = await getCurrent()
