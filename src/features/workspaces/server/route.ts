@@ -9,6 +9,7 @@ import { sessionMiddleware } from "@/lib/session-middleware"
 import { generateInviteCode } from "@/lib/utils"
 
 import { carateWorkspacesSchema, updateWorkspacesSchema } from "../schemas"
+import { createSessionClient } from "@/lib/appwrite"
 
 const app = new Hono()
   .get('/', sessionMiddleware, async (c) => {
@@ -139,6 +140,30 @@ const app = new Hono()
       );
 
       return c.json({ data: workspace })
+    }
+  )
+  .delete(
+    '/:workspaceId',
+    sessionMiddleware,
+    async (c) => {
+      const { databases, account } = await createSessionClient()
+      const user = await account.get()
+
+      const { workspaceId } = c.req.param()
+
+      const member = await getMember({
+        databases,
+        workspaceId,
+        userId: user.$id
+      })
+
+      if (!member || member.role !== MemberRole.ADMIN) {
+        return c.json({ error: 'Unauthorized' }, 401)
+      }
+
+      await databases.deleteDocument(DATABASES_ID, WORKSPACES_ID, workspaceId)
+
+      return c.json({ data: { $id: workspaceId } })
     }
   )
 
