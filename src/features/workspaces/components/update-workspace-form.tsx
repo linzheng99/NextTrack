@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowLeft, ImageIcon } from "lucide-react"
+import { ArrowLeft, CopyIcon, ImageIcon } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import React, { useRef } from "react"
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -34,6 +35,8 @@ import { updateWorkspacesSchema } from "../schemas"
 import { type Workspace } from "../types"
 import { useConfirm } from "@/hooks/use-confirm"
 import { useDeleteWorkspace } from "../api/use-delete-workspace"
+import { useResetInviteCode } from "../api/use-reset-invite-code"
+import { toast } from "sonner"
 
 interface UpdateWorkspaceFormProps {
   onCancel?: () => void
@@ -49,6 +52,10 @@ export default function UpdateWorkspaceForm({
   const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } = useDeleteWorkspace()
 
   const [DeleteDialog, confirmDelete] = useConfirm('警告', '此操作不能撤销!', 'destructive')
+  const [ResetInviteCodeDialog, confirmResetInviteCode] = useConfirm('提示', '重置邀请码', 'destructive')
+  const { mutate: resetInviteCode, isPending: isResettingInviteCode } = useResetInviteCode()
+
+  const inviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`
 
   const inputRef = useRef<HTMLInputElement>(null)
   const form = useForm<z.infer<typeof updateWorkspacesSchema>>({
@@ -94,9 +101,29 @@ export default function UpdateWorkspaceForm({
     })
   }
 
+  async function handleResetInviteCode() {
+    const ok = await confirmResetInviteCode()
+
+    if(!ok) return null
+
+    resetInviteCode({ param: { workspaceId: initialValues.$id } }, {
+      onSuccess: () => {
+        router.refresh()
+      }
+    })
+
+  }
+
+  function handleCopyInviteLink() {
+    navigator.clipboard.writeText(inviteLink).then(() => {
+      toast.success('复制成功！')
+    })
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <DeleteDialog />
+      <ResetInviteCodeDialog />
       <Card className="border-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-4">
@@ -194,6 +221,27 @@ export default function UpdateWorkspaceForm({
             </form>
           </Form>
         </CardContent>
+      </Card>
+      <Card className="border-none">
+        <CardHeader>
+          <CardTitle>
+            重置邀请码
+          </CardTitle>
+          <CardDescription>
+            使用邀请码将成员添加到您的工作区
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-4">
+            <Input value={inviteLink} disabled />
+            <CopyIcon className="size-5 cursor-pointer" onClick={handleCopyInviteLink} />
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-col w-full gap-4 lg:flex-row justify-end">
+          <Button variant="default" className="w-full lg:w-auto" onClick={handleResetInviteCode} disabled={isPending || isResettingInviteCode}>
+            重置邀请码
+          </Button>
+        </CardFooter>
       </Card>
       <Card className="border-none">
         <CardHeader>
