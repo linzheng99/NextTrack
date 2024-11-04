@@ -16,10 +16,11 @@ export default async function WorkspaceIdSettingsPage(
   const user = await getCurrent()
   if (!user) redirect('/sign-in')
 
-  const workspace = await getWorkspace({ workspaceId: params.workspaceId })
+  const { workspaceId } = await params
+  const workspace = await getWorkspace({ workspaceId })
 
   if (!workspace) {
-    return redirect(`/workspaces/${params.workspaceId}`)
+    return redirect(`/workspaces/${workspaceId}`)
   }
 
   return (
