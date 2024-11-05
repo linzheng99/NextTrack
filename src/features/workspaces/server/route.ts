@@ -1,6 +1,7 @@
 import { zValidator } from "@hono/zod-validator"
 import { Hono } from "hono"
 import { ID, Query } from "node-appwrite"
+import { z } from "zod"
 
 import { DATABASES_ID, IMAGES_BUCKET_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config"
 import { MemberRole } from "@/features/members/types"
@@ -10,6 +11,7 @@ import { sessionMiddleware } from "@/lib/session-middleware"
 import { generateInviteCode } from "@/lib/utils"
 
 import { carateWorkspacesSchema, updateWorkspacesSchema } from "../schemas"
+import { type Workspace } from "../types"
 
 const app = new Hono()
   .get('/', sessionMiddleware, async (c) => {
@@ -187,6 +189,42 @@ const app = new Hono()
 
       const workspace = await databases.updateDocument(DATABASES_ID, WORKSPACES_ID, workspaceId, {
         inviteCode: generateInviteCode()
+      })
+
+      return c.json({ data: workspace })
+    }
+  )
+  .post(
+    '/:workspaceId/join',
+    sessionMiddleware,
+    zValidator('json', z.object({ code: z.string() })),
+    async (c) => {
+      const { databases, account } = await createSessionClient()
+      const user = await account.get()
+
+      const { workspaceId } = c.req.param()
+      const { code } = c.req.valid('json')
+
+      const member = await getMember({
+        databases,
+        workspaceId,
+        userId: user.$id
+      })
+
+      if (member) {
+        return c.json({ error: '该用户已加入该工作区' }, 400)
+      }
+
+      const workspace = await databases.getDocument<Workspace>(DATABASES_ID, WORKSPACES_ID, workspaceId)
+
+      if (workspace.inviteCode !== code) {
+        return c.json({ error: '邀请码错误' }, 400)
+      }
+
+      await databases.createDocument(DATABASES_ID, MEMBERS_ID, ID.unique(), {
+        workspaceId,
+        userId: user.$id,
+        role: MemberRole.MEMBER
       })
 
       return c.json({ data: workspace })

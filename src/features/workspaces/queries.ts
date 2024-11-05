@@ -70,3 +70,22 @@ export async function getWorkspace({ workspaceId }: { workspaceId: string }) {
     return null
   }
 }
+
+export async function getWorkspaceInfo({ workspaceId }: { workspaceId: string }) {
+  try {
+    const { databases } = await createSessionClient()
+
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASES_ID,
+      WORKSPACES_ID,
+      workspaceId,
+    )
+
+    return {
+      name: workspace.name,
+    }
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
