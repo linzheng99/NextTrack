@@ -126,7 +126,7 @@ export default function UpdateWorkspaceForm({
       <Card className="border-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => onCancel ? onCancel() : router.push(`/workspaces/${initialValues.$id}`)}>
+            <Button size="sm" variant="outline" onClick={() => onCancel ? onCancel() : router.push(`/workspaces/${initialValues.$id}`)}>
               <ArrowLeft className="size-4" />
               返回
             </Button>

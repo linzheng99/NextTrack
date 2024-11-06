@@ -56,7 +56,7 @@ export default function MembersList() {
       <DeleteMemberDialog />
       <CardHeader className="flex gap-4">
         <CardTitle className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => router.push(`/workspaces/${workspaceId}`)}>
+          <Button size="sm" variant="outline" onClick={() => router.push(`/workspaces/${workspaceId}`)}>
             <ArrowLeft className="size-4" />
             返回
           </Button>
