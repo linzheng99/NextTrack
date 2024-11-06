@@ -5,6 +5,7 @@ import WorkspaceSwitcher from "@/features/workspaces/components/workspace-switch
 
 import DottedSeparator from "./dotted-separator";
 import Navigation from "./navigation";
+import Projects from "./projects";
 
 export default function Sidebar() {
   return (
@@ -17,6 +18,8 @@ export default function Sidebar() {
       <WorkspaceSwitcher />
       <DottedSeparator className="my-4" />
       <Navigation />
+      <DottedSeparator className="my-4" />
+      <Projects />
     </div>
   )
 }
