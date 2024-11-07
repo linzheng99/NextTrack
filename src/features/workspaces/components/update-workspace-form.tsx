@@ -69,7 +69,7 @@ export default function UpdateWorkspaceForm({
   function onSubmit(values: z.infer<typeof updateWorkspacesSchema>) {
     const finalValues = {
       ...values,
-      image: values.image
+      image: values.image || ''
     }
 
     mutate(

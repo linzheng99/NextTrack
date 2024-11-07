@@ -61,7 +61,7 @@ export default function UpdateProjectForm({
   function onSubmit(values: z.infer<typeof updateProjectSchema>) {
     const finalValues = {
       ...values,
-      image: values.image
+      image: values.image || ''
     }
 
     mutate(
