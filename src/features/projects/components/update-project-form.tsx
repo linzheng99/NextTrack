@@ -1,12 +1,10 @@
 "use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowLeft, CopyIcon, ImageIcon } from "lucide-react"
+import { ArrowLeft, ImageIcon } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import React, { useRef } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 import { type z } from "zod"
 
 import DottedSeparator from "@/components/dotted-separator"
@@ -15,7 +13,6 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -32,48 +29,43 @@ import { Input } from "@/components/ui/input"
 import { useConfirm } from "@/hooks/use-confirm"
 import { cn } from "@/lib/utils"
 
-import { useDeleteWorkspace } from "../api/use-delete-workspace"
-import { useResetInviteCode } from "../api/use-reset-invite-code"
-import { useUpdateWorkspace } from "../api/use-update-workspace"
-import { updateWorkspacesSchema } from "../schemas"
-import { type Workspace } from "../types"
+import { useDeleteProject } from "../api/use-delete-project"
+import { useUpdateProject } from "../api/use-update-project"
+import { updateProjectSchema } from "../schemas"
+import { type Project } from "../types"
 
-interface UpdateWorkspaceFormProps {
+interface UpdateProjectFormProps {
   onCancel?: () => void
-  initialValues: Workspace
+  initialValues: Project
 }
 
-export default function UpdateWorkspaceForm({
+export default function UpdateProjectForm({
   onCancel,
   initialValues
-}: UpdateWorkspaceFormProps) {
+}: UpdateProjectFormProps) {
   const router = useRouter()
-  const { mutate, isPending } = useUpdateWorkspace()
-  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } = useDeleteWorkspace()
+  const { mutate, isPending } = useUpdateProject()
+  const { mutate: deleteProject, isPending: isDeletingProject } = useDeleteProject()
 
   const [DeleteDialog, confirmDelete] = useConfirm('警告', '此操作不能撤销!', 'destructive')
-  const [ResetInviteCodeDialog, confirmResetInviteCode] = useConfirm('提示', '重置邀请码', 'destructive')
-  const { mutate: resetInviteCode, isPending: isResettingInviteCode } = useResetInviteCode()
-
-  const inviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const form = useForm<z.infer<typeof updateWorkspacesSchema>>({
-    resolver: zodResolver(updateWorkspacesSchema),
+  const form = useForm<z.infer<typeof updateProjectSchema>>({
+    resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       ...initialValues,
-      image: initialValues.image || ''
+      image: initialValues.image ?? ''
     },
   })
 
-  function onSubmit(values: z.infer<typeof updateWorkspacesSchema>) {
+  function onSubmit(values: z.infer<typeof updateProjectSchema>) {
     const finalValues = {
       ...values,
       image: values.image
     }
 
     mutate(
-      { form: finalValues, param: { workspaceId: initialValues.$id } },
+      { form: finalValues, param: { projectId: initialValues.$id } },
       {
         onSuccess: () => {
           form.reset(finalValues)
@@ -93,34 +85,20 @@ export default function UpdateWorkspaceForm({
 
     if (!ok) return null
 
-    deleteWorkspace({ param: { workspaceId: initialValues.$id } }, {
+    deleteProject({ param: { projectId: initialValues.$id } }, {
       onSuccess: () => {
-        window.location.href = '/'
+        window.location.href = `/workspaces/${initialValues.workspaceId}`
       }
     })
-  }
-
-  async function handleResetInviteCode() {
-    const ok = await confirmResetInviteCode()
-
-    if (!ok) return null
-
-    resetInviteCode({ param: { workspaceId: initialValues.$id } })
-  }
-
-  async function handleCopyInviteLink() {
-    await navigator.clipboard.writeText(inviteLink)
-    toast.success('复制成功！')
   }
 
   return (
     <div className="flex flex-col gap-4">
       <DeleteDialog />
-      <ResetInviteCodeDialog />
       <Card className="border-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-4">
-            <Button size="sm" variant="outline" onClick={() => onCancel ? onCancel() : router.push(`/workspaces/${initialValues.$id}`)}>
+            <Button size="sm" variant="outline" onClick={() => onCancel ? onCancel() : router.push(`/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`)}>
               <ArrowLeft className="size-4" />
               返回
             </Button>
@@ -138,7 +116,7 @@ export default function UpdateWorkspaceForm({
                   <FormItem>
                     <FormLabel>名称</FormLabel>
                     <FormControl>
-                      <Input placeholder="请输入工作区名称" {...field} />
+                      <Input placeholder="请输入项目名称" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -172,7 +150,7 @@ export default function UpdateWorkspaceForm({
                           accept=".jpg,.svg,.png,.jpeg"
                           className="hidden"
                           onChange={handleImageChange}
-                          disabled={isPending}
+                          disabled={isPending || isDeletingProject}
                         />
                         {
                           field.value ? (
@@ -181,7 +159,7 @@ export default function UpdateWorkspaceForm({
                               size="sm"
                               className="w-fit"
                               variant="destructive"
-                              disabled={isPending || isDeletingWorkspace}
+                              disabled={isPending || isDeletingProject}
                               onClick={() => {
                                 field.onChange('')
                                 if (inputRef.current) {
@@ -196,7 +174,7 @@ export default function UpdateWorkspaceForm({
                               type="button"
                               size="sm"
                               className="w-fit"
-                              disabled={isPending || isDeletingWorkspace}
+                              disabled={isPending || isDeletingProject}
                               onClick={() => inputRef.current?.click()}
                             >
                               Upload image
@@ -211,32 +189,11 @@ export default function UpdateWorkspaceForm({
               <DottedSeparator className="mb-4" />
               <div className="flex justify-end gap-4">
                 <Button type="button" variant="outline" onClick={() => onCancel?.()} className={cn(!onCancel && 'invisible')}>Cancel</Button>
-                <Button type="submit" disabled={isPending || isDeletingWorkspace}>Update</Button>
+                <Button type="submit" disabled={isPending || isDeletingProject}>Update</Button>
               </div>
             </form>
           </Form>
         </CardContent>
-      </Card>
-      <Card className="border-none">
-        <CardHeader>
-          <CardTitle>
-            重置邀请码
-          </CardTitle>
-          <CardDescription>
-            使用邀请码将成员添加到您的工作区
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-4">
-            <Input value={inviteLink} disabled />
-            <CopyIcon className="size-5 cursor-pointer" onClick={handleCopyInviteLink} />
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-col w-full gap-4 lg:flex-row justify-end">
-          <Button variant="default" className="w-full lg:w-auto" onClick={handleResetInviteCode} disabled={isResettingInviteCode}>
-            重置邀请码
-          </Button>
-        </CardFooter>
       </Card>
       <Card className="border-none">
         <CardHeader>
@@ -246,12 +203,12 @@ export default function UpdateWorkspaceForm({
         </CardHeader>
         <CardContent>
           <p className="text-sm text-neutral-400">
-            删除工作区将删除所有数据
+            删除项目将删除所有数据
           </p>
         </CardContent>
         <CardFooter className="flex flex-col w-full gap-4 lg:flex-row justify-end">
-          <Button variant="destructive" className="w-full lg:w-auto" onClick={handleDelete} disabled={isPending || isDeletingWorkspace || isResettingInviteCode}>
-            删除工作区
+          <Button variant="destructive" className="w-full lg:w-auto" onClick={handleDelete} disabled={isPending || isDeletingProject}>
+            删除项目
           </Button>
         </CardFooter>
       </Card>

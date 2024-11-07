@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ImageIcon } from "lucide-react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import React, { useRef } from "react"
 import { useForm } from "react-hook-form"
 import { type z } from "zod"
@@ -39,7 +38,6 @@ interface CreateProjectFormProps {
 export default function CreateProjectForm({
   onCancel
 }: CreateProjectFormProps) {
-  const router = useRouter()
   const workspaceId = useWorkspaceId()
 
   const { mutate, isPending } = useCreateProject()
@@ -53,7 +51,6 @@ export default function CreateProjectForm({
   })
 
   function onSubmit(values: z.infer<typeof createProjectSchema>) {
-    console.log(values)
     const finalValues = {
       ...values,
       workspaceId,
@@ -63,9 +60,8 @@ export default function CreateProjectForm({
     mutate(
       { form: finalValues },
       {
-        onSuccess: ({ data }) => {
+        onSuccess: () => {
           form.reset()
-          router.push(`/workspaces/${data.workspaceId}/projects/${data.$id}`)
         }
       })
   }

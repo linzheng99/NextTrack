@@ -5,28 +5,28 @@ import { toast } from 'sonner'
 
 import { client } from '@/lib/rpc'
 
-type ResponseType = InferResponseType<typeof client.api.workspaces[':workspaceId']['reset-invite-code']['$post'], 200>
-type RequestType = InferRequestType<typeof client.api.workspaces[':workspaceId']['reset-invite-code']['$post']>
+type ResponseType = InferResponseType<typeof client.api.projects[':projectId']['$delete'], 200>
+type RequestType = InferRequestType<typeof client.api.projects[':projectId']['$delete']>
 
-export const useResetInviteCode = () => {
+export const useDeleteProject = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.workspaces[':workspaceId']['reset-invite-code']['$post']({ param })
+      const response = await client.api.projects[':projectId']['$delete']({ param })
 
       if (!response.ok) {
-        throw new Error('重置失败...')
+        throw new Error('删除失败...')
       }
 
       return await response.json()
     },
     onSuccess: ({ data }) => {
-      toast.success('重置成功！')
+      toast.success('删除成功！')
       router.refresh()
-      void queryClient.invalidateQueries({ queryKey: ['workspaces'] })
-      void queryClient.invalidateQueries({ queryKey: ['workspaces', data.$id] })
+      void queryClient.invalidateQueries({ queryKey: ['projects'] })
+      void queryClient.invalidateQueries({ queryKey: ['project', data.$id] })
     },
     onError: (error) => {
       toast.error(error.message)
