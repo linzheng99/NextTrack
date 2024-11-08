@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { getCurrent } from "@/features/auth/queries"
 import ProjectAvatar from "@/features/projects/components/project-avatar"
 import { getProject } from "@/features/projects/queries"
+import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher"
 
 interface ProjectsPageProps {
   params: Promise<{ projectId: string }>
@@ -38,6 +39,7 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
           </Link>
         </Button>
       </div>
+      <TaskViewSwitcher />
     </div>
   )
 }
