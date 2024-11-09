@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils"
 
 interface DatePickerProps {
-  value: Date
+  value: Date | undefined
   onChange: (date: Date) => void
   className?: string
   placeholder?: string
