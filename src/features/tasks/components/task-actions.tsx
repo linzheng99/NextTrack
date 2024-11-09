@@ -9,6 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useConfirm } from "@/hooks/use-confirm"
+
+import { useDeleteTask } from "../api/use-delete-task"
 
 interface TaskActionsProps {
   id: string
@@ -17,12 +20,25 @@ interface TaskActionsProps {
 }
 
 export default function TaskActions({ id, projectId, children }: TaskActionsProps) {
+  const [DeleteDialog, confirmDelete] = useConfirm('警告', '此操作不能撤销!', 'destructive')
+  const { mutate: deleteTask, isPending: isDeletingPending } = useDeleteTask()
+
   function handleTaskDetails() {
     console.log(id, projectId)
   }
 
+  async function handleDeleteTask() {
+    const ok = await confirmDelete()
+    if (!ok) {
+      return
+    }
+
+    deleteTask({ param: { taskId: id } })
+  }
+
   return (
     <DropdownMenu>
+      <DeleteDialog />
       <DropdownMenuTrigger asChild>
         {children}
       </DropdownMenuTrigger>
@@ -52,8 +68,8 @@ export default function TaskActions({ id, projectId, children }: TaskActionsProp
           Edit Task
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => { }}
-          disabled={false}
+          onClick={handleDeleteTask}
+          disabled={isDeletingPending}
           className="font-medium p-2.5 text-red-500 focus:text-red-500"
         >
           <TrashIcon className="size-4 mr-2" />
