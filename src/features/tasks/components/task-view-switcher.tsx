@@ -5,14 +5,15 @@ import { useQueryState } from "nuqs"
 
 import DottedSeparator from "@/components/dotted-separator"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
 
 import { useGetTasks } from "../api/use-get-tasks"
 import useCreateTaskModal from "../hooks/use-create-task-modal"
 import { useTaskFilters } from "../hooks/use-task-filters"
+import { columns } from "./columns"
 import DataFilters from "./data-filters"
+import { DataTable } from "./data-table"
 
 export default function TaskViewSwitcher() {
   const [view, setView] = useQueryState('task-view', {
@@ -53,7 +54,7 @@ export default function TaskViewSwitcher() {
           ) : (
             <>
               <TabsContent value="table" className="overflow-x-auto">
-                {isTasksLoading ? <Skeleton className="w-full h-full" /> : JSON.stringify(tasks)}
+                <DataTable columns={columns} data={tasks?.documents ?? []} />
               </TabsContent>
               <TabsContent value="kanban">kanban</TabsContent>
               <TabsContent value="calendar">calendar</TabsContent>

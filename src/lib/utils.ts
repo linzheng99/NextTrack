@@ -10,3 +10,7 @@ export function generateInviteCode(length = 6) {
   const code = Array.from({ length }, () => characters[Math.floor(Math.random() * characters.length)]).join('')
   return code
 }
+
+export function snakeCaseToTitleCase(str: string) {
+  return str.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
+}

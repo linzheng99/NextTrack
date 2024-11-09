@@ -9,7 +9,7 @@ import { createAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
 
 import { createTaskSchema } from "../schemas";
-import { TaskStatus } from "../types";
+import { type Task, TaskStatus } from "../types";
 
 const app = new Hono()
   .get(
@@ -53,10 +53,10 @@ const app = new Hono()
         query.push(Query.search('name', search))
       }
       // 获取任务
-      const tasks = await databases.listDocuments(DATABASES_ID, TASKS_ID, query)
+      const tasks = await databases.listDocuments<Task>(DATABASES_ID, TASKS_ID, query)
       // 提取所有任务相关的项目ID和负责人ID
-      const projectIds = tasks.documents.map((task) => task.projectId as string)
-      const assigneeIds = tasks.documents.map((task) => task.assigneeId as string)
+      const projectIds = tasks.documents.map((task) => task.projectId)
+      const assigneeIds = tasks.documents.map((task) => task.assigneeId)
       // 获取相关项目信息
       const projects = await databases.listDocuments(DATABASES_ID, PROJECTS_ID, projectIds.length > 0 ? [
         Query.contains('$id', projectIds)
@@ -78,7 +78,7 @@ const app = new Hono()
       )
       // 组装完整的任务数据，包含项目和负责人信息
       const populatedTasks = tasks.documents.map((task) => {
-        const project = projects.documents.find((project) => project.id === task.projectId)
+        const project = projects.documents.find((project) => project.$id === task.projectId)
         const assignee = assignees.find((assignee) => assignee.$id === task.assigneeId)
 
         return {
