@@ -1,3 +1,5 @@
+"use client"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { type z } from "zod"
@@ -58,6 +60,7 @@ export default function CreateTaskForm({ onCancel, projectOptions, memberOptions
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),
     defaultValues: {
+      name: '',
       workspaceId,
     },
   })

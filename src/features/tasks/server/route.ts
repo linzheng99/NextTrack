@@ -58,13 +58,13 @@ const app = new Hono()
       const projectIds = tasks.documents.map((task) => task.projectId as string)
       const assigneeIds = tasks.documents.map((task) => task.assigneeId as string)
       // 获取相关项目信息
-      const projects = await databases.listDocuments(DATABASES_ID, PROJECTS_ID, [
-        projectIds.length > 0 ? Query.contains('id', projectIds) : '',
-      ])
+      const projects = await databases.listDocuments(DATABASES_ID, PROJECTS_ID, projectIds.length > 0 ? [
+        Query.contains('$id', projectIds)
+      ] : [])
       // 获取相关成员信息
-      const members = await databases.listDocuments(DATABASES_ID, MEMBERS_ID, [
-        assigneeIds.length > 0 ? Query.contains('id', assigneeIds) : '',
-      ])
+      const members = await databases.listDocuments(DATABASES_ID, MEMBERS_ID, assigneeIds.length > 0 ? [
+        Query.contains('$id', assigneeIds)
+      ] : [])
       // 获取任务负责人的详细信息（包括姓名和邮箱）
       const assignees = await Promise.all(
         members.documents.map(async (member) => {
