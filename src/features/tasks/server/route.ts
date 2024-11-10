@@ -153,5 +153,56 @@ const app = new Hono()
       return c.json({ data: { $id: taskId } })
     }
   )
+  .post('/:taskId', sessionMiddleware, zValidator('json', createTaskSchema.partial()), async (c) => {
+    const databases = c.get('databases')
+    const user = c.get('user')
+    const { taskId } = c.req.param()
+    const { name, status, workspaceId, projectId, dueDate, assigneeId, description } = c.req.valid('json')
+
+    const existingTask = await databases.getDocument<Task>(DATABASES_ID, TASKS_ID, taskId)
+
+    const member = await getMember({ databases, workspaceId: existingTask.workspaceId, userId: user.$id })
+    if (!member) {
+      return c.json({ error: 'Unauthorized' }, 401)
+    }
+
+    const task = await databases.updateDocument(DATABASES_ID, TASKS_ID, taskId, {
+      name,
+      status,
+      workspaceId,
+      projectId,
+      dueDate,
+      assigneeId,
+      description,
+    })
+
+    return c.json({ data: task })
+  })
+  .get('/:taskId', sessionMiddleware, async (c) => {
+    const databases = c.get('databases')
+    const currentUser = c.get('user')
+    const { taskId } = c.req.param()
+
+    const task = await databases.getDocument<Task>(DATABASES_ID, TASKS_ID, taskId)
+
+    const currentMember = await getMember({ databases, workspaceId: task.workspaceId, userId: currentUser.$id })
+    if (!currentMember) {
+      return c.json({ error: 'Unauthorized' }, 401)
+    }
+
+    const project = await databases.getDocument(DATABASES_ID, PROJECTS_ID, task.projectId)
+    const member = await databases.getDocument(DATABASES_ID, MEMBERS_ID, task.assigneeId)
+    const assignee = {
+      ...member,
+      name: member.name,
+      email: member.email,
+    }
+
+    return c.json({ data: {
+      ...task,
+      project,
+      assignee,
+    } })
+  })
 
 export default app

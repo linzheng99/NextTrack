@@ -12,6 +12,7 @@ import {
 import { useConfirm } from "@/hooks/use-confirm"
 
 import { useDeleteTask } from "../api/use-delete-task"
+import useEditTaskModal from "../hooks/use-edit-task-modal"
 
 interface TaskActionsProps {
   id: string
@@ -22,6 +23,7 @@ interface TaskActionsProps {
 export default function TaskActions({ id, projectId, children }: TaskActionsProps) {
   const [DeleteDialog, confirmDelete] = useConfirm('警告', '此操作不能撤销!', 'destructive')
   const { mutate: deleteTask, isPending: isDeletingPending } = useDeleteTask()
+  const { open } = useEditTaskModal()
 
   function handleTaskDetails() {
     console.log(id, projectId)
@@ -60,7 +62,7 @@ export default function TaskActions({ id, projectId, children }: TaskActionsProp
           Open Project
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => { }}
+          onClick={() => open(id)}
           disabled={false}
           className="font-medium p-2.5"
         >
