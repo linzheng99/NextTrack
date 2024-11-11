@@ -5,8 +5,8 @@ import { toast } from 'sonner'
 
 import { client } from '@/lib/rpc'
 
-type ResponseType = InferResponseType<typeof client.api.tasks[':taskId']['$post'], 200>
-type RequestType = InferRequestType<typeof client.api.tasks[':taskId']['$post']>
+type ResponseType = InferResponseType<typeof client.api.tasks[':taskId']['$patch'], 200>
+type RequestType = InferRequestType<typeof client.api.tasks[':taskId']['$patch']>
 
 export const useUpdateTask = () => {
   const router = useRouter()
@@ -14,7 +14,7 @@ export const useUpdateTask = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json, param }) => {
-      const response = await client.api.tasks[':taskId']['$post']({ json, param })
+      const response = await client.api.tasks[':taskId']['$patch']({ json, param })
 
       if (!response.ok) {
         throw new Error('更新失败...')

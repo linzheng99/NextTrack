@@ -153,7 +153,6 @@ const app = new Hono()
       return c.json({ data: { $id: taskId } })
     }
   )
-  .post('/:taskId', sessionMiddleware, zValidator('json', createTaskSchema.partial()), async (c) => {
   .patch('/:taskId', sessionMiddleware, zValidator('json', createTaskSchema.partial()), async (c) => {
     const databases = c.get('databases')
     const user = c.get('user')
@@ -199,11 +198,62 @@ const app = new Hono()
       email: member.email,
     }
 
-    return c.json({ data: {
-      ...task,
-      project,
-      assignee,
-    } })
+    return c.json({
+      data: {
+        ...task,
+        project,
+        assignee,
+      }
+    })
   })
+  .post(
+    '/bulk-update',
+    sessionMiddleware,
+    zValidator(
+      'json',
+      z.object({
+        tasks: z.array(
+          z.object({
+            $id: z.string(),
+            position: z.number().int().positive().min(1000).max(1_000_000),
+            status: z.nativeEnum(TaskStatus),
+          }))
+      })
+    ),
+    async (c) => {
+      const databases = c.get('databases')
+      const { tasks } = c.req.valid('json')
+      const user = c.get('user')
 
+      // 获取任务列表
+      const taskToUpdate = await databases.listDocuments<Task>(DATABASES_ID, TASKS_ID, [
+        Query.contains('$id', tasks.map((task) => task.$id))
+      ])
+      // 获取任务列表中 workspaceId 列表
+      const workspaceIds = new Set(taskToUpdate.documents.map((task) => task.workspaceId))
+
+      if (workspaceIds.size !== 1) {
+        return c.json({ error: '多个任务的 workspaceId 不一致' }, 400)
+      }
+      const workspaceId = workspaceIds.values().next().value
+
+      const member = await getMember({ databases, workspaceId, userId: user.$id })
+      if (!member) {
+        return c.json({ error: 'Unauthorized' }, 401)
+      }
+
+      const updatedTasks = await Promise.all(
+        tasks.map(async (task) => await databases.updateDocument(DATABASES_ID, TASKS_ID, task.$id, {
+          position: task.position,
+          status: task.status,
+        }))
+      )
+
+      return c.json({
+        data: {
+          documents: updatedTasks
+        }
+      })
+    }
+  )
 export default app

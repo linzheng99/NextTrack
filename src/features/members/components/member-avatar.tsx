@@ -14,7 +14,7 @@ export default function MemberAvatar({
 }: MemberAvatarProps) {
   return (
     <Avatar className={cn("size-5 transition border bg-neutral-200 border-neutral-300 rounded-full flex items-center justify-center", className)}>
-      <AvatarFallback className={cn("bg-neutral-200 text-neutral-500 font-medium text-lg uppercase", fallbackClassName)}>
+      <AvatarFallback className={cn("bg-neutral-200 text-neutral-500 font-medium text-sm uppercase", fallbackClassName)}>
         {name.charAt(0)}
       </AvatarFallback>
     </Avatar>

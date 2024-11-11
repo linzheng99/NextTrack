@@ -2,15 +2,18 @@
 
 import { Loader, Plus } from "lucide-react"
 import { useQueryState } from "nuqs"
+import { useCallback } from "react"
 
 import DottedSeparator from "@/components/dotted-separator"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
 
+import { useBulkUpdateTask } from "../api/use-bulk-update-task"
 import { useGetTasks } from "../api/use-get-tasks"
 import useCreateTaskModal from "../hooks/use-create-task-modal"
 import { useTaskFilters } from "../hooks/use-task-filters"
+import { type TaskStatus } from "../types"
 import { columns } from "./columns"
 import DataFilters from "./data-filters"
 import DataKanban from "./data-kanban"
@@ -25,6 +28,12 @@ export default function TaskViewSwitcher() {
   const { open } = useCreateTaskModal()
 
   const { data: tasks, isLoading: isTasksLoading } = useGetTasks({ workspaceId, projectId, status, assigneeId, dueDate })
+
+  const { mutate: bulkUpdateTask } = useBulkUpdateTask()
+
+  const handleKanbanChange = useCallback((tasks: { $id: string, position: number, status: TaskStatus }[]) => {
+    bulkUpdateTask({ json: { tasks } })
+  }, [bulkUpdateTask])
 
   return (
     <Tabs
@@ -58,7 +67,7 @@ export default function TaskViewSwitcher() {
                 <DataTable columns={columns} data={tasks?.documents ?? []} />
               </TabsContent>
               <TabsContent value="kanban">
-                <DataKanban data={tasks?.documents ?? []}  />
+                <DataKanban data={tasks?.documents ?? []} onChange={handleKanbanChange} />
               </TabsContent>
               <TabsContent value="calendar">calendar</TabsContent>
             </>
