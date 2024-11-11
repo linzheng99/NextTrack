@@ -50,9 +50,10 @@ interface CreateTaskFormProps {
     id: string
     name: string
   }[]
+  status?: TaskStatus
 }
 
-export default function CreateTaskForm({ onCancel, projectOptions, memberOptions }: CreateTaskFormProps) {
+export default function CreateTaskForm({ onCancel, projectOptions, memberOptions, status }: CreateTaskFormProps) {
   const workspaceId = useWorkspaceId()
 
   const { mutate, isPending } = useCreateTask()
@@ -62,6 +63,7 @@ export default function CreateTaskForm({ onCancel, projectOptions, memberOptions
     defaultValues: {
       name: '',
       workspaceId,
+      status: status || undefined
     },
   })
 

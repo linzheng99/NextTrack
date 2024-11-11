@@ -13,6 +13,7 @@ import useCreateTaskModal from "../hooks/use-create-task-modal"
 import { useTaskFilters } from "../hooks/use-task-filters"
 import { columns } from "./columns"
 import DataFilters from "./data-filters"
+import DataKanban from "./data-kanban"
 import { DataTable } from "./data-table"
 
 export default function TaskViewSwitcher() {
@@ -38,7 +39,7 @@ export default function TaskViewSwitcher() {
             <TabsTrigger value="kanban" className="w-full lg:w-auto">Kanban</TabsTrigger>
             <TabsTrigger value="calendar" className="w-full lg:w-auto">Calendar</TabsTrigger>
           </TabsList>
-          <Button size="sm" variant="default" className="w-full lg:w-auto" onClick={open}>
+          <Button size="sm" variant="default" className="w-full lg:w-auto" onClick={() => open()}>
             <Plus className="size-4" />
             Add Task
           </Button>
@@ -56,7 +57,9 @@ export default function TaskViewSwitcher() {
               <TabsContent value="table" className="overflow-x-auto">
                 <DataTable columns={columns} data={tasks?.documents ?? []} />
               </TabsContent>
-              <TabsContent value="kanban">kanban</TabsContent>
+              <TabsContent value="kanban">
+                <DataKanban data={tasks?.documents ?? []}  />
+              </TabsContent>
               <TabsContent value="calendar">calendar</TabsContent>
             </>
           )

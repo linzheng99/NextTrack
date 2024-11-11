@@ -5,6 +5,8 @@ import { useGetMembers } from "@/features/members/api/use-get-members"
 import { useGetProjects } from "@/features/projects/api/use-get-projects"
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
 
+import useCreateTaskModal from "../hooks/use-create-task-modal"
+import { type TaskStatus } from "../types"
 import CreateTaskForm from "./create-task-form"
 
 interface CreateTaskFormWrapperProps {
@@ -31,6 +33,8 @@ export default function CreateTaskFormWrapper({
     name: member.name,
   }))
 
+  const { isOpen } = useCreateTaskModal()
+
   const isLoading = isLoadingProjects || isLoadingMembers
 
   if (isLoading) {
@@ -45,6 +49,6 @@ export default function CreateTaskFormWrapper({
 
 
   return (
-    <CreateTaskForm onCancel={onCancel} projectOptions={projectOptions ?? []} memberOptions={memberOptions ?? []} />
+    <CreateTaskForm onCancel={onCancel} projectOptions={projectOptions ?? []} memberOptions={memberOptions ?? []} status={isOpen['task-status'] as TaskStatus} />
   )
 }
