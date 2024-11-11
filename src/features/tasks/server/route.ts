@@ -154,6 +154,7 @@ const app = new Hono()
     }
   )
   .post('/:taskId', sessionMiddleware, zValidator('json', createTaskSchema.partial()), async (c) => {
+  .patch('/:taskId', sessionMiddleware, zValidator('json', createTaskSchema.partial()), async (c) => {
     const databases = c.get('databases')
     const user = c.get('user')
     const { taskId } = c.req.param()
