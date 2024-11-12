@@ -1,16 +1,18 @@
 "use client"
-import { Task } from "../types"
-
-import { zhCN } from "date-fns/locale"
-import { Calendar, dateFnsLocalizer } from "react-big-calendar"
-import { format, parse, startOfWeek, getDay, subMonths, addMonths } from 'date-fns'
-import { useState } from "react"
 
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import './data-calendar.css'
-import EventCard from "./event-card"
-import { Button } from "@/components/ui/button"
+
+import { addMonths,format, getDay, parse, startOfWeek, subMonths } from 'date-fns'
+import { zhCN } from "date-fns/locale"
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+import { useState } from "react"
+import { Calendar, dateFnsLocalizer } from "react-big-calendar"
+
+import { Button } from "@/components/ui/button"
+
+import { type Task } from "../types"
+import EventCard from "./event-card"
 
 interface DataCalendarProps {
   data: Task[]

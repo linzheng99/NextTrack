@@ -15,10 +15,10 @@ import useCreateTaskModal from "../hooks/use-create-task-modal"
 import { useTaskFilters } from "../hooks/use-task-filters"
 import { type TaskStatus } from "../types"
 import { columns } from "./columns"
+import DataCalendar from "./data-calendar"
 import DataFilters from "./data-filters"
 import DataKanban from "./data-kanban"
 import { DataTable } from "./data-table"
-import DataCalendar from "./data-calendar"
 
 export default function TaskViewSwitcher() {
   const [view, setView] = useQueryState('task-view', {
