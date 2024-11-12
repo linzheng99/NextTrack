@@ -10,7 +10,11 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useTaskFilters } from "../hooks/use-task-filters";
 import { TaskStatus } from "../types";
 
-export default function DataFilters() {
+interface DataFiltersProps {
+  hideProjectFilter?: boolean
+}
+
+export default function DataFilters({ hideProjectFilter }: DataFiltersProps) {
   const workspaceId = useWorkspaceId()
   const [{ projectId, status, assigneeId, dueDate }, setFilters] = useTaskFilters()
   const { data: projects, isLoading: isLoadingProjects } = useGetProjects({ workspaceId })
@@ -67,26 +71,28 @@ export default function DataFilters() {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select defaultValue={projectId ?? undefined} onValueChange={handleProjectChange}>
-        <SelectTrigger className="w-full lg:w-auto">
-          <FolderIcon className="size-4 mr-2" />
-          <SelectValue placeholder="All Projects" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem key="all" value="undefined">
-              All Projects
-            </SelectItem>
-            {projectOptions?.map(project => (
-              <SelectItem key={project.value} value={project.value}>
-                <div className="flex items-center gap-2">
-                  {project.label}
-                </div>
+      {!hideProjectFilter && (
+        <Select defaultValue={projectId ?? undefined} onValueChange={handleProjectChange}>
+          <SelectTrigger className="w-full lg:w-auto">
+            <FolderIcon className="size-4 mr-2" />
+            <SelectValue placeholder="All Projects" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem key="all" value="undefined">
+                All Projects
               </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+              {projectOptions?.map(project => (
+                <SelectItem key={project.value} value={project.value}>
+                  <div className="flex items-center gap-2">
+                    {project.label}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      )}
       <Select defaultValue={assigneeId ?? undefined} onValueChange={handleAssigneeChange}>
         <SelectTrigger className="w-full lg:w-auto">
           <UsersIcon className="size-4 mr-2" />

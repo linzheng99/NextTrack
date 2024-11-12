@@ -39,7 +39,7 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
           </Link>
         </Button>
       </div>
-      <TaskViewSwitcher />
+      <TaskViewSwitcher hideProjectFilter />
     </div>
   )
 }
