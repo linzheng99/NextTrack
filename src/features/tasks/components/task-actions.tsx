@@ -1,6 +1,7 @@
 "use client"
 
 import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
 import * as React from "react"
 
 import {
@@ -9,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
 import { useConfirm } from "@/hooks/use-confirm"
 
 import { useDeleteTask } from "../api/use-delete-task"
@@ -21,12 +23,14 @@ interface TaskActionsProps {
 }
 
 export default function TaskActions({ id, projectId, children }: TaskActionsProps) {
+  const workspaceId = useWorkspaceId()
+  const router = useRouter()
   const [DeleteDialog, confirmDelete] = useConfirm('警告', '此操作不能撤销!', 'destructive')
   const { mutate: deleteTask, isPending: isDeletingPending } = useDeleteTask()
   const { open } = useEditTaskModal()
 
   function handleTaskDetails() {
-    console.log(id, projectId)
+    router.push(`/workspaces/${workspaceId}/tasks/${id}`)
   }
 
   async function handleDeleteTask() {

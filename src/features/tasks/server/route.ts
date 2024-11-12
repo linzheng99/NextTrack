@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { DATABASES_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 import { getMember } from "@/features/members/utils";
+import { type Project } from "@/features/projects/types";
 import { createAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
 
@@ -190,7 +191,7 @@ const app = new Hono()
       return c.json({ error: 'Unauthorized' }, 401)
     }
 
-    const project = await databases.getDocument(DATABASES_ID, PROJECTS_ID, task.projectId)
+    const project = await databases.getDocument<Project>(DATABASES_ID, PROJECTS_ID, task.projectId)
     const member = await databases.getDocument(DATABASES_ID, MEMBERS_ID, task.assigneeId)
     const assignee = {
       ...member,
