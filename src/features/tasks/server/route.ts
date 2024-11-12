@@ -180,6 +180,7 @@ const app = new Hono()
     return c.json({ data: task })
   })
   .get('/:taskId', sessionMiddleware, async (c) => {
+    const { users } = await createAdminClient()
     const databases = c.get('databases')
     const currentUser = c.get('user')
     const { taskId } = c.req.param()
@@ -193,10 +194,11 @@ const app = new Hono()
 
     const project = await databases.getDocument<Project>(DATABASES_ID, PROJECTS_ID, task.projectId)
     const member = await databases.getDocument(DATABASES_ID, MEMBERS_ID, task.assigneeId)
+    const user = await users.get(member.userId as string)
     const assignee = {
       ...member,
-      name: member.name,
-      email: member.email,
+      name: user.name,
+      email: user.email,
     }
 
     return c.json({
