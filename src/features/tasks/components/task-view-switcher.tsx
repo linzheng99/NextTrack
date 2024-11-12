@@ -18,6 +18,7 @@ import { columns } from "./columns"
 import DataFilters from "./data-filters"
 import DataKanban from "./data-kanban"
 import { DataTable } from "./data-table"
+import DataCalendar from "./data-calendar"
 
 export default function TaskViewSwitcher() {
   const [view, setView] = useQueryState('task-view', {
@@ -69,7 +70,9 @@ export default function TaskViewSwitcher() {
               <TabsContent value="kanban">
                 <DataKanban data={tasks?.documents ?? []} onChange={handleKanbanChange} />
               </TabsContent>
-              <TabsContent value="calendar">calendar</TabsContent>
+              <TabsContent value="calendar">
+                <DataCalendar data={tasks?.documents ?? []} />
+              </TabsContent>
             </>
           )
         }
