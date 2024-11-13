@@ -14,14 +14,14 @@ export default function DottedSeparator({
   color = '#d4d4d8',
   height = '2px',
   dotSize = '2px',
-  gapSize = '6px',
+  gapSize = '8px',
   direction = 'horizontal'
 }: DottedSeparatorProps) {
   const isHorizontal = direction === 'horizontal'
 
   return (
     <div className={cn(
-      'horizontal' ? 'w-full flex items-center' : 'h-full flex justify-center',
+      isHorizontal ? 'w-full flex items-center' : 'h-full flex justify-center',
       className
     )}>
       <div
