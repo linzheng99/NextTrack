@@ -59,17 +59,3 @@ export async function getWorkspace({ workspaceId }: { workspaceId: string }) {
 
   return workspace
 }
-
-export async function getWorkspaceInfo({ workspaceId }: { workspaceId: string }) {
-  const { databases } = await createSessionClient()
-
-  const workspace = await databases.getDocument<Workspace>(
-    DATABASES_ID,
-    WORKSPACES_ID,
-    workspaceId,
-  )
-
-  return {
-    name: workspace.name,
-  }
-}

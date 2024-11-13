@@ -16,10 +16,13 @@ import {
 import { useJoinWorkspace } from "../api/use-join-workspace"
 import { useInviteCode } from "../hooks/use-invite-code"
 import { useWorkspaceId } from "../hooks/use-workspace-id"
+import WorkspaceAvatar from './workspace-avatar';
 
 interface JoinWorkspaceFormProps {
   initialValues: {
+    $id: string
     name: string
+    image: string
   }
 }
 
@@ -47,10 +50,15 @@ export default function JoinWorkspaceForm({ initialValues }: JoinWorkspaceFormPr
     <Card className="w-full">
       <CardHeader>
         <CardTitle>加入工作空间</CardTitle>
-        <CardDescription>
-          您已被邀请加入
-          <strong> {initialValues.name} </strong>
-          工作空间
+        <CardDescription className="flex items-center gap-2">
+          <span>您已被邀请加入</span>
+          <WorkspaceAvatar
+            image={initialValues.image}
+            name={initialValues.name}
+            className="size-6"
+          />
+          <strong>{initialValues.name}</strong>
+          <span>工作空间</span>
         </CardDescription>
       </CardHeader>
       <CardContent>
