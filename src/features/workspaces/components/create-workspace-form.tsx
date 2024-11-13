@@ -72,7 +72,7 @@ export default function CreateWorkspaceForm({
   return (
     <Card className="border-none">
       <CardHeader>
-        <CardTitle>创建工作区</CardTitle>
+        <CardTitle>创建工作空间</CardTitle>
       </CardHeader>
       <CardContent>
         <DottedSeparator className="mb-4" />
@@ -85,7 +85,7 @@ export default function CreateWorkspaceForm({
                 <FormItem>
                   <FormLabel>名称</FormLabel>
                   <FormControl>
-                    <Input placeholder="请输入工作区名称" {...field} />
+                    <Input placeholder="请输入工作空间名称" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

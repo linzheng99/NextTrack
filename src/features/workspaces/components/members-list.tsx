@@ -36,7 +36,7 @@ export default function MembersList() {
   const { mutate: updateMember, isPending: isUpdatingMember } = useUpdateMember()
   const [DeleteMemberDialog, confirmDeleteMember] = useConfirm(
     '确定要删除该成员吗？',
-    '删除后，该成员将无法访问当前工作区。',
+    '删除后，该成员将无法访问当前工作空间。',
     'destructive'
   )
 

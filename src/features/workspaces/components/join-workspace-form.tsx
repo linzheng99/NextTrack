@@ -46,11 +46,11 @@ export default function JoinWorkspaceForm({ initialValues }: JoinWorkspaceFormPr
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>加入工作区</CardTitle>
+        <CardTitle>加入工作空间</CardTitle>
         <CardDescription>
           您已被邀请加入
           <strong> {initialValues.name} </strong>
-          工作区
+          工作空间
         </CardDescription>
       </CardHeader>
       <CardContent>

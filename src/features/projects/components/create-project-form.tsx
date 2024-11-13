@@ -76,7 +76,7 @@ export default function CreateProjectForm({
   return (
     <Card className="border-none">
       <CardHeader>
-        <CardTitle>创建该工作区下的项目</CardTitle>
+        <CardTitle>创建该工作空间下的项目</CardTitle>
       </CardHeader>
       <CardContent>
         <DottedSeparator className="mb-4" />

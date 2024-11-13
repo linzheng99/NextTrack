@@ -56,7 +56,7 @@ const app = new Hono()
       const user = c.get('user')
 
       const memberToDelete = await databases.getDocument(DATABASES_ID, MEMBERS_ID, memberId)
-      // 获取当前用户在当前工作区中的角色
+      // 获取当前用户在当前工作空间中的角色
       const member = await getMember({
         databases,
         workspaceId: memberToDelete.workspaceId,
@@ -72,7 +72,7 @@ const app = new Hono()
         return c.json({ error: 'Unauthorized' }, 401)
       }
 
-      // 获取当前工作区中的所有成员
+      // 获取当前工作空间中的所有成员
       const allMembersInWorkspace = await databases.listDocuments(
         DATABASES_ID,
         MEMBERS_ID,
@@ -80,7 +80,7 @@ const app = new Hono()
       )
 
       if (allMembersInWorkspace.total === 1) {
-        return c.json({ error: '不能操作工作区中最后一个成员' }, 400)
+        return c.json({ error: '不能操作工作空间中最后一个成员' }, 400)
       }
 
       await databases.deleteDocument(DATABASES_ID, MEMBERS_ID, memberId)
@@ -120,7 +120,7 @@ const app = new Hono()
       )
 
       if (allMembersInWorkspace.total === 1) {
-        return c.json({ error: '不能操作工作区中最后一个成员' }, 400)
+        return c.json({ error: '不能操作工作空间中最后一个成员' }, 400)
       }
 
       await databases.updateDocument(DATABASES_ID, MEMBERS_ID, memberId, { role })

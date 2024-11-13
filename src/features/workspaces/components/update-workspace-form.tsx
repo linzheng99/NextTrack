@@ -72,13 +72,7 @@ export default function UpdateWorkspaceForm({
       image: values.image || ''
     }
 
-    mutate(
-      { form: finalValues, param: { workspaceId: initialValues.$id } },
-      {
-        onSuccess: () => {
-          form.reset(finalValues)
-        }
-      })
+    mutate({ form: finalValues, param: { workspaceId: initialValues.$id } })
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -138,7 +132,7 @@ export default function UpdateWorkspaceForm({
                   <FormItem>
                     <FormLabel>名称</FormLabel>
                     <FormControl>
-                      <Input placeholder="请输入工作区名称" {...field} />
+                      <Input placeholder="请输入工作空间名称" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -223,7 +217,7 @@ export default function UpdateWorkspaceForm({
             重置邀请码
           </CardTitle>
           <CardDescription>
-            使用邀请码将成员添加到您的工作区
+            使用邀请码将成员添加到您的工作空间
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -246,12 +240,12 @@ export default function UpdateWorkspaceForm({
         </CardHeader>
         <CardContent>
           <p className="text-sm text-neutral-400">
-            删除工作区将删除所有数据
+            删除工作空间将删除所有数据
           </p>
         </CardContent>
         <CardFooter className="flex flex-col w-full gap-4 lg:flex-row justify-end">
           <Button variant="destructive" className="w-full lg:w-auto" onClick={handleDelete} disabled={isPending || isDeletingWorkspace || isResettingInviteCode}>
-            删除工作区
+            删除工作空间
           </Button>
         </CardFooter>
       </Card>

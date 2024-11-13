@@ -10,7 +10,7 @@ export const createTaskSchema = z.object({
     required_error: "请选择任务状态",
   }),
   workspaceId: z.string().trim().min(1, {
-    message: "请选择工作区",
+    message: "请选择工作空间",
   }),
   projectId: z.string().trim().min(1, {
     message: "请选择项目",
