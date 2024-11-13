@@ -3,11 +3,8 @@
 import { Query } from 'node-appwrite'
 
 import { DATABASES_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
-import { MemberRole } from "@/features/members/types";
-import { getMember } from "@/features/members/utils";
 import { createSessionClient } from "@/lib/appwrite";
 
-import { type Workspace } from "./types";
 
 export async function getWorkspaces() {
   const { account, databases } = await createSessionClient()
@@ -35,27 +32,4 @@ export async function getWorkspaces() {
   )
 
   return workspaces
-}
-
-export async function getWorkspace({ workspaceId }: { workspaceId: string }) {
-  const { account, databases } = await createSessionClient()
-  const user = await account.get()
-
-  const member = await getMember({
-    databases,
-    workspaceId,
-    userId: user.$id
-  })
-
-  if (!member || member.role !== MemberRole.ADMIN) {
-    throw new Error('Unauthorized')
-  }
-
-  const workspace = await databases.getDocument<Workspace>(
-    DATABASES_ID,
-    WORKSPACES_ID,
-    workspaceId,
-  )
-
-  return workspace
 }
