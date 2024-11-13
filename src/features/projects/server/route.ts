@@ -9,6 +9,7 @@ import { createSessionClient } from "@/lib/appwrite"
 import { sessionMiddleware } from "@/lib/session-middleware"
 
 import { createProjectSchema, updateProjectSchema } from "../schemas"
+import { type Project } from "../types"
 
 const app = new Hono()
   .post('/',
@@ -91,6 +92,33 @@ const app = new Hono()
 
       return c.json({ data: projects })
 
+    }
+  )
+  .get(
+    '/:projectId',
+    sessionMiddleware,
+    async (c) => {
+      const databases = c.get('databases')
+      const user = c.get('user')
+      const { projectId } = c.req.param()
+
+      const project = await databases.getDocument<Project>(
+        DATABASES_ID,
+        PROJECTS_ID,
+        projectId
+      )
+
+      const member = await getMember({
+        databases,
+        workspaceId: project.workspaceId,
+        userId: user.$id
+      })
+
+      if (!member) {
+        return c.json({ error: 'Unauthorized' }, 401)
+      }
+
+      return c.json({ data: project })
     }
   )
   .patch(
