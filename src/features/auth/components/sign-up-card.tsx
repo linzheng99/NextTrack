@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth"
 
 import { useRegister } from '../api/use-register'
 import { registerSchema } from '../schemas'
@@ -92,11 +93,11 @@ export default function SignUpCard() {
       </CardContent>
       <DottedSeparator className='px-7 mb-2' />
       <CardContent className='flex flex-col gap-2 w-full p-7'>
-        <Button variant={'outline'} disabled={isPending}>
+        <Button variant={'outline'} disabled={isPending} onClick={signUpWithGoogle}>
           <FcGoogle />
           Login with Google
         </Button>
-        <Button variant={'outline'} disabled={isPending}>
+        <Button variant={'outline'} disabled={isPending} onClick={signUpWithGithub}>
           <FaGithub />
           Login with Github
         </Button>
