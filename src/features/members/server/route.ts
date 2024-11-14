@@ -7,7 +7,7 @@ import { DATABASES_ID, MEMBERS_ID } from "@/config"
 import { createAdminClient } from "@/lib/appwrite"
 import { sessionMiddleware } from "@/lib/session-middleware"
 
-import { MemberRole } from "../types"
+import { type Member, MemberRole } from "../types"
 import { getMember } from "../utils"
 
 const app = new Hono()
@@ -31,7 +31,7 @@ const app = new Hono()
         return c.json({ error: 'Unauthorized' }, 401)
       }
 
-      const members = await databases.listDocuments(
+      const members = await databases.listDocuments<Member>(
         DATABASES_ID,
         MEMBERS_ID,
         [Query.equal('workspaceId', workspaceId)]
@@ -40,7 +40,7 @@ const app = new Hono()
       // 通过整个用户表去寻找成员们
       const populatedMembers = await Promise.all(
         members.documents.map(async (member) => {
-          const user = await users.get(member.userId as string)
+          const user = await users.get(member.userId)
           return { ...member, name: user.name, email: user.email }
         })
       )
