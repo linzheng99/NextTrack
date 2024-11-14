@@ -26,7 +26,7 @@ const app = new Hono()
         maxAge: 60 * 60 * 24 * 30
       })
 
-      return c.json({ success: true })
+      return c.json({ success: true, session: session.secret })
     }
   )
   .post(
