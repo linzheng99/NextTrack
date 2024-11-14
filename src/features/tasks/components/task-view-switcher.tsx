@@ -7,6 +7,7 @@ import { useCallback } from "react"
 import DottedSeparator from "@/components/dotted-separator"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useProjectId } from "@/features/projects/hooks/use-project-id"
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
 
 import { useBulkUpdateTask } from "../api/use-bulk-update-task"
@@ -30,9 +31,10 @@ export default function TaskViewSwitcher({ hideProjectFilter }: TaskViewSwitcher
   })
   const [{ projectId, status, assigneeId, dueDate }] = useTaskFilters()
   const workspaceId = useWorkspaceId()
+  const paramProjectId = useProjectId()
   const { open } = useCreateTaskModal()
 
-  const { data: tasks, isLoading: isTasksLoading } = useGetTasks({ workspaceId, projectId, status, assigneeId, dueDate })
+  const { data: tasks, isLoading: isTasksLoading } = useGetTasks({ workspaceId, projectId: projectId || paramProjectId, status, assigneeId, dueDate })
 
   const { mutate: bulkUpdateTask } = useBulkUpdateTask()
 
