@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { signUpWithGithub } from '@/lib/oauth'
 
 import { useLogin } from '../api/use-login'
 import { loginSchema } from '../schemas'
@@ -84,7 +85,7 @@ export default function SignInCard() {
           <FcGoogle />
           Login with Google
         </Button>
-        <Button variant={'outline'} disabled={isPending}>
+        <Button variant={'outline'} disabled={isPending} onClick={signUpWithGithub}>
           <FaGithub />
           Login with Github
         </Button>

@@ -73,7 +73,7 @@ const app = new Hono()
           const user = await users.get(member.userId as string)
           return {
             ...member,
-            name: user.name,
+            name: user.name || user.email,
             email: user.email,
           }
         })
@@ -201,7 +201,7 @@ const app = new Hono()
     const user = await users.get(member.userId as string)
     const assignee = {
       ...member,
-      name: user.name,
+      name: user.name || user.email,
       email: user.email,
     }
 
