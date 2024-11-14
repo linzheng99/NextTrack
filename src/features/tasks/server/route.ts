@@ -244,6 +244,10 @@ const app = new Hono()
       }
       const workspaceId = workspaceIds.values().next().value
 
+      if (!workspaceId) {
+        return c.json({ error: 'workspaceId 不存在' }, 400)
+      }
+
       const member = await getMember({ databases, workspaceId, userId: user.$id })
       if (!member) {
         return c.json({ error: 'Unauthorized' }, 401)

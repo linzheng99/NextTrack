@@ -58,7 +58,7 @@ export default function TaskActions({ id, projectId, children }: TaskActionsProp
           Task Details
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => { }}
+          onClick={() => router.push(`/workspaces/${workspaceId}/projects/${projectId}`)}
           disabled={false}
           className="font-medium p-2.5"
         >
