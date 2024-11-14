@@ -13,7 +13,7 @@ export type ProjectAnalyticsResponseType = InferResponseType<typeof client.api.p
 
 export const useGetProjectAnalytics = ({ projectId }: UseGetProjectAnalyticsProps) => {
   const query = useQuery({
-    queryKey: ['projects-analytics', projectId],
+    queryKey: ['project-analytics', projectId],
     queryFn: async () => {
       const response = await client.api.projects[':projectId']['analytics'].$get({ param: { projectId } })
 

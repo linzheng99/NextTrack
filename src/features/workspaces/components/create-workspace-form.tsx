@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ImageIcon } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import React, { useRef } from "react"
 import { useForm } from "react-hook-form"
 import { type z } from "zod"
@@ -37,6 +38,7 @@ interface CreateWorkspaceFormProps {
 export default function CreateWorkspaceForm({
   onCancel
 }: CreateWorkspaceFormProps) {
+  const router = useRouter()
   const { mutate, isPending } = useCreateWorkspace()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -58,6 +60,7 @@ export default function CreateWorkspaceForm({
       {
         onSuccess: () => {
           form.reset()
+          router.push(`/`)
         }
       })
   }

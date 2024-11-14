@@ -22,9 +22,10 @@ export const useCreateWorkspace = () => {
 
       return await response.json()
     },
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       toast.success('创建成功！')
-      router.push(`/workspaces/${data.$id}`)
+
+      router.refresh()
       void queryClient.invalidateQueries({ queryKey: ['workspaces'] })
     },
     onError: (error) => {

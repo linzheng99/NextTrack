@@ -138,13 +138,15 @@ const ProjectsList = ({ projects, total }: ProjectsListProps) => {
               </Link>
             </li>
           ))}
-          <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
+          <li className="text-sm text-muted-foreground text-center hidden first-of-type:block col-span-2">
             没有更多项目了...
           </li>
         </ul>
-        <Button variant="default" asChild className="mt-4 w-full">
-          <Link href={`/workspaces/${workspaceId}/projects`}>查看所有项目</Link>
-        </Button>
+        {projects.length > 0 && (
+          <Button variant="default" asChild className="mt-4 w-full">
+            <Link href={`/workspaces/${workspaceId}/projects`}>查看所有项目</Link>
+          </Button>
+        )}
       </div>
     </div>
   )
