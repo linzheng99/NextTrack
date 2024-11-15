@@ -83,7 +83,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
   - (standalone)     - 独立页面布局
 - components (组件)
   - (ui)             - shadcn/ui 组件
-- features (功能点)
+- features (Feature-First 架构)
   - workspaces (工作空间)
     - api (CRUD API)
     - hooks (hooks)
